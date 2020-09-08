@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { Route, NavLink } from "react-router-dom";
+import { Route, NavLink, Switch, Redirect } from "react-router-dom";
 
 import "./Blog.css";
 import Posts from "./Posts/Posts";
 import NewPost from "./NewPost/NewPost";
-import FullPost from "./FullPost/FullPost";
 
 class Blog extends Component {
+  state = {
+    auth: false,
+  };
   render() {
     return (
       <div className="Blog">
@@ -17,7 +19,7 @@ class Blog extends Component {
                 {/* default className is active can also use activeStyle the same like inline style */}
                 <NavLink
                   activeClassName="nav-active"
-                  to="/"
+                  to="/posts"
                   exact
                   activeStyle={{
                     color: "#C1FF00",
@@ -44,11 +46,14 @@ class Blog extends Component {
           </nav>
         </header>
         {/*<Route path="/" exact render={() => <h1>Home</h1>} />*/}
-        {/*<Switch>*/}
-        <Route path="/" exact component={Posts} />
-        <Route path="/new-post" exact component={NewPost} />
-        <Route path="/posts/:id" exact component={FullPost} />
-        {/*</Switch>*/}
+        <Switch>
+          {this.state.auth ? (
+            <Route path="/new-post" exact component={NewPost} />
+          ) : null}
+          <Route path="/posts" component={Posts} />
+          <Route render={() => <h1>Access denied - You need to Login</h1>} />
+          {/*<Redirect from="/" to="/posts" />*/}
+        </Switch>
       </div>
     );
   }
